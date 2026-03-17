@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-orange: #FF7854;
+  --color-primary-pink: #FD267D;
+  --color-like: #21D07A;
+  --color-nope: #F85032;
+  --color-superlike: #29ABE2;
+  --color-boost: #B145E9;
+  --color-rewind: #FCD000;
+  --color-card-dark: #1a1b22;
+  --color-bg-dark: #0c0d10;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary-gradient: linear-gradient(45deg, #FF7854, #FD267D);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0c0d10;
+    --foreground: #ffffff;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: inherit;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.tinder-gradient {
+  background: var(--primary-gradient);
+}
+
+.tinder-text-gradient {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
