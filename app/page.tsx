@@ -45,12 +45,12 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-bg-dark text-white selection:bg-primary-pink selection:text-white">
       <div className="w-full max-w-[450px] h-screen flex flex-col relative shadow-2xl overflow-hidden border-x border-white/5">
         {/* Header */}
-        <header className="h-[60px] flex items-center justify-between px-4 border-b border-white/10 shrink-0">
-          <User className="text-gray-400 cursor-pointer hover:text-white transition-colors" size={24} />
-          <h1 className="text-xl font-black bg-gradient-to-r from-primary-orange to-primary-pink bg-clip-text text-transparent italic">
+        <header className="h-[70px] flex items-center justify-between px-4 border-b border-white/10 shrink-0">
+          <User className="text-gray-400 cursor-pointer hover:text-white transition-colors" size={28} />
+          <h1 className="text-3xl font-black bg-gradient-to-r from-primary-orange to-primary-pink bg-clip-text text-transparent italic tracking-tight">
             You And Me
           </h1>
-          <MessageCircle className="text-gray-400 cursor-pointer hover:text-white transition-colors" size={24} />
+          <MessageCircle className="text-gray-400 cursor-pointer hover:text-white transition-colors" size={28} />
         </header>
 
         {/* Card Stack */}
