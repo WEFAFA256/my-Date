@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { User, MessageCircle, RotateCcw, X, Star, Heart, Zap, Flame, LayoutGrid, MessageSquare, Settings, Sparkles } from "lucide-react";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import Image from "next/image";
 
 const profiles = [
   {
@@ -119,7 +120,7 @@ function TinderCard({ profile, zIndex, onSwipe }: { profile: any; zIndex: number
   return (
     <motion.div
       style={{ x, rotate, zIndex }}
-      className="absolute inset-0 cursor-grab active:cursor-grabbing select-none"
+      className="absolute inset-0 cursor-grab active:cursor-grabbing select-none will-change-transform"
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={(e, info) => {
@@ -129,10 +130,17 @@ function TinderCard({ profile, zIndex, onSwipe }: { profile: any; zIndex: number
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={(x.get() > 0 ? { x: 500, opacity: 0 } : { x: -500, opacity: 0 })}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25, restDelta: 0.5 }}
     >
-      <div className="relative w-full h-full bg-card-dark rounded-3xl overflow-hidden shadow-2xl border border-white/5">
-        <img src={profile.image} alt={profile.name} className="w-full h-full object-cover pointer-events-none" />
+      <div className="relative w-full h-full bg-card-dark rounded-3xl overflow-hidden shadow-2xl border border-white/5 transform-gpu backdrop-blur-sm">
+        <Image
+          src={profile.image}
+          alt={profile.name}
+          fill
+          priority
+          sizes="(max-width: 450px) 100vw, 450px"
+          className="object-cover pointer-events-none"
+        />
 
         {/* Indicators */}
         <motion.div style={{ opacity: opacityRight }} className="absolute top-10 left-6 border-4 border-like text-like font-black text-4xl px-4 py-2 rounded-xl -rotate-12 pointer-events-none">
