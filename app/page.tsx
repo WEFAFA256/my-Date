@@ -32,7 +32,12 @@ const profiles = [
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [match, setMatch] = useState<{ name: string; img: string } | null>(null);
+  const [hasMounted, setHasMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const handleAction = (type: "like" | "nope") => {
     if (type === "like" && Math.random() > 0.3) {
@@ -44,7 +49,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-vh-screen bg-bg-dark text-white selection:bg-primary-pink selection:text-white h-screen overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-bg-dark text-white selection:bg-primary-pink selection:text-white h-screen overflow-hidden">
       <div className="w-full max-w-[450px] h-screen flex flex-col relative shadow-2xl overflow-hidden border-x border-white/5 bg-[#0c0d10]">
         
         {/* Header */}
@@ -61,66 +66,68 @@ export default function Home() {
 
         {/* Vertical Chain Feed */}
         <main className="flex-1 relative overflow-hidden" ref={containerRef}>
-          <motion.div 
-             className="h-full touch-none"
-             drag="y"
-             dragConstraints={{ top: -(profiles.length * 100), bottom: 0 }}
-             onDragEnd={(e, info) => {
-               if (info.offset.y < -100 && currentIndex < profiles.length - 1) {
-                 setCurrentIndex(prev => prev + 1);
-               } else if (info.offset.y > 100 && currentIndex > 0) {
-                 setCurrentIndex(prev => prev - 1);
-               }
-             }}
-             animate={{ y: `-${currentIndex * 100}%` }}
-             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            {profiles.map((profile, i) => (
-              <section key={profile.id} className="h-full w-full p-4 flex flex-col shrink-0">
-                <div className="relative flex-1 bg-card-dark rounded-3xl overflow-hidden shadow-2xl border border-white/5 transform-gpu backdrop-blur-sm">
-                  <Image
-                    src={profile.image}
-                    alt={profile.name}
-                    fill
-                    priority
-                    sizes="(max-width: 450px) 100vw, 450px"
-                    className="object-cover pointer-events-none"
-                  />
-                  
-                  {/* Card Info Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent p-8 flex flex-col justify-end">
-                    <motion.div 
-                       initial={{ y: 20, opacity: 0 }}
-                       whileInView={{ y: 0, opacity: 1 }}
-                       transition={{ delay: 0.2 }}
-                    >
-                      <h2 className="text-4xl font-black flex items-baseline gap-3">
-                        {profile.name} <span className="text-2xl font-normal text-gray-300">{profile.age}</span>
-                      </h2>
-                      <p className="text-lg text-gray-200 mt-2 font-medium leading-relaxed drop-shadow-md">{profile.bio}</p>
-                    </motion.div>
+          {hasMounted && (
+            <motion.div 
+               className="h-full touch-none"
+               drag="y"
+               dragConstraints={{ top: -(profiles.length * 100), bottom: 0 }}
+               onDragEnd={(e, info) => {
+                 if (info.offset.y < -100 && currentIndex < profiles.length - 1) {
+                   setCurrentIndex(prev => prev + 1);
+                 } else if (info.offset.y > 100 && currentIndex > 0) {
+                   setCurrentIndex(prev => prev - 1);
+                 }
+               }}
+               animate={{ y: `-${currentIndex * 100}%` }}
+               transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {profiles.map((profile, i) => (
+                <section key={profile.id} className="h-full w-full p-4 flex flex-col shrink-0">
+                  <div className="relative flex-1 bg-card-dark rounded-3xl overflow-hidden shadow-2xl border border-white/5 transform-gpu backdrop-blur-sm">
+                    <Image
+                      src={profile.image}
+                      alt={profile.name}
+                      fill
+                      priority
+                      sizes="(max-width: 450px) 100vw, 450px"
+                      className="object-cover pointer-events-none"
+                    />
+                    
+                    {/* Card Info Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent p-8 flex flex-col justify-end">
+                      <motion.div 
+                         initial={{ y: 20, opacity: 0 }}
+                         whileInView={{ y: 0, opacity: 1 }}
+                         transition={{ delay: 0.2 }}
+                      >
+                        <h2 className="text-4xl font-black flex items-baseline gap-3">
+                          {profile.name} <span className="text-2xl font-normal text-gray-300">{profile.age}</span>
+                        </h2>
+                        <p className="text-lg text-gray-200 mt-2 font-medium leading-relaxed drop-shadow-md">{profile.bio}</p>
+                      </motion.div>
+                    </div>
                   </div>
+                </section>
+              ))}
+
+              {/* Empty State */}
+              <section className="h-full w-full flex items-center justify-center p-10 text-center">
+                <div>
+                  <div className="w-24 h-24 bg-gradient-to-br from-primary-orange to-primary-pink rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-pink/20">
+                    <Sparkles size={48} className="text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">That&apos;s everyone for now!</h2>
+                  <p className="text-gray-400 mb-8">You&apos;ve looked through all potential matches.</p>
+                  <button
+                    onClick={() => setCurrentIndex(0)}
+                    className="px-8 py-3 bg-gradient-to-r from-primary-orange to-primary-pink rounded-full font-bold hover:scale-105 transition-transform active:scale-95 cursor-pointer"
+                  >
+                    Start Over
+                  </button>
                 </div>
               </section>
-            ))}
-
-            {/* Empty State */}
-            <section className="h-full w-full flex items-center justify-center p-10 text-center">
-              <div>
-                <div className="w-24 h-24 bg-gradient-to-br from-primary-orange to-primary-pink rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-pink/20">
-                  <Sparkles size={48} className="text-white" />
-                </div>
-                <h2 className="text-2xl font-bold mb-2">That&apos;s everyone for now!</h2>
-                <p className="text-gray-400 mb-8">You&apos;ve looked through all potential matches.</p>
-                <button
-                  onClick={() => setCurrentIndex(0)}
-                  className="px-8 py-3 bg-gradient-to-r from-primary-orange to-primary-pink rounded-full font-bold hover:scale-105 transition-transform active:scale-95 cursor-pointer"
-                >
-                  Start Over
-                </button>
-              </div>
-            </section>
-          </motion.div>
+            </motion.div>
+          )}
         </main>
 
         {/* Action Buttons */}
