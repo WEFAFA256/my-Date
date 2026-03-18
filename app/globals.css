@@ -1,28 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-orange: #FF7854;
-  --color-primary-pink: #FF007F;
-  --color-like: #21D07A;
-  --color-nope: #F85032;
-  --color-superlike: #29ABE2;
-  --color-boost: #B145E9;
-  --color-rewind: #FCD000;
-  --color-card-dark: #1a1b22;
-  --color-bg-dark: #0c0d10;
+  --color-matcha: #FD297B; /* Re-using variable for ease but with Sunset Pink */
+  --color-matcha-dark: #E0246B;
+  --color-matcha-light: #FF5864;
+  --color-bg-dark: #121212;
+  --color-card-dark: #1A1A1A;
+  --color-text-dim: #9ca3af;
+  --color-like: #FD297B;
+  --color-nope: #ef4444;
+  --color-superlike: #3b82f6;
+  --color-boost: #a855f7;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary-gradient: linear-gradient(45deg, #FF7854, #FD267D);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0d10;
-    --foreground: #ffffff;
-  }
+  --background: #121212;
+  --foreground: #ffffff;
+  --matcha-gradient: linear-gradient(135deg, #FD297B, #FF5864);
+  --matcha-glow: 0 0 25px rgba(253, 41, 123, 0.4);
 }
 
 body {
@@ -33,12 +28,12 @@ body {
   height: 100vh;
 }
 
-.tinder-gradient {
-  background: var(--primary-gradient);
+.matcha-gradient {
+  background: var(--matcha-gradient);
 }
 
-.tinder-text-gradient {
-  background: var(--primary-gradient);
+.matcha-text-gradient {
+  background: var(--matcha-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
