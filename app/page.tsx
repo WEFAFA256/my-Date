@@ -1,52 +1,116 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { User, MessageCircle, RotateCcw, X, Star, Heart, Zap, Leaf, LayoutGrid, MessageSquare, Settings, Sparkles } from "lucide-react";
-import { motion, AnimatePresence, useMotionValue, useTransform, useScroll, useSpring } from "framer-motion";
+import { User, MessageCircle, RotateCcw, X, Star, Heart, Zap, Leaf, LayoutGrid, MessageSquare, Settings, Sparkles, LogOut, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
-const profiles = [
+// Fallback profiles if DB is empty
+const fallbackProfiles = [
   {
-    id: 1,
-    name: "Sarah",
+    id: "fb-1",
+    full_name: "Sarah",
     age: 24,
     bio: "Loves hiking and the beach. Looking for someone adventurous. 🏔️🌊",
-    image: "/images/sarah.png",
+    image_url: "/images/sarah.png",
   },
   {
-    id: 2,
-    name: "Michael",
+    id: "fb-2",
+    full_name: "Michael",
     age: 27,
     bio: "Engineer by day, chef by night. Can make a mean lasagna. 🍝👨‍🍳",
-    image: "/images/michael.png",
-  },
-  {
-    id: 3,
-    name: "Chloe",
-    age: 22,
-    bio: "Aspiring photographer. Let's capture some memories together. 📸✨",
-    image: "/images/chloe.png",
+    image_url: "/images/michael.png",
   },
 ];
 
 export default function Home() {
+  const [profiles, setProfiles] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [match, setMatch] = useState<{ name: string; img: string } | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     setHasMounted(true);
+    checkUserAndFetchProfiles();
   }, []);
 
+  const checkUserAndFetchProfiles = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    
+    setCurrentUser(user);
+
+    // Check if user has a profile
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (!profile || !profile.full_name) {
+      router.push("/setup-profile");
+      return;
+    }
+
+    // Fetch other profiles
+    const { data: otherProfiles, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .neq("id", user.id) // Don't show current user's own profile
+      .limit(10);
+
+    if (otherProfiles && otherProfiles.length > 0) {
+      setProfiles(otherProfiles);
+    } else {
+      setProfiles(fallbackProfiles);
+    }
+    
+    setLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
+
   const handleAction = (type: "like" | "nope") => {
+    if (profiles.length === 0) return;
+    
     if (type === "like" && Math.random() > 0.3) {
-      setMatch({ name: profiles[currentIndex].name, img: profiles[currentIndex].image });
+      setMatch({ 
+        name: profiles[currentIndex].full_name || profiles[currentIndex].name, 
+        img: profiles[currentIndex].image_url || profiles[currentIndex].image 
+      });
     }
     if (currentIndex < profiles.length - 1) {
       setCurrentIndex(prev => prev + 1);
     }
   };
+
+  if (loading && hasMounted) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0c0d10] text-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-[#FF7854] to-[#FF007F] rounded-full flex items-center justify-center animate-pulse">
+            <Leaf size={32} className="text-white" fill="currentColor" />
+          </div>
+          <Loader2 className="animate-spin text-primary-pink" size={24} />
+          <p className="font-bold italic text-lg opacity-50">Matcha is heating up...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-bg-dark text-white selection:bg-primary-pink selection:text-white h-screen overflow-hidden">
@@ -61,7 +125,9 @@ export default function Home() {
               Matcha
             </h1>
           </div>
-          <MessageCircle className="text-gray-400 cursor-pointer hover:text-white transition-colors" size={28} />
+          <div className="flex items-center gap-4">
+            <MessageCircle className="text-gray-400 cursor-pointer hover:text-white transition-colors" size={28} />
+          </div>
         </header>
 
         {/* Vertical Chain Feed */}
@@ -84,14 +150,21 @@ export default function Home() {
               {profiles.map((profile, i) => (
                 <section key={profile.id} className="h-full w-full p-4 flex flex-col shrink-0">
                   <div className="relative flex-1 bg-card-dark rounded-3xl overflow-hidden shadow-2xl border border-white/5 transform-gpu backdrop-blur-sm">
-                    <Image
-                      src={profile.image}
-                      alt={profile.name}
-                      fill
-                      priority
-                      sizes="(max-width: 450px) 100vw, 450px"
-                      className="object-cover pointer-events-none"
-                    />
+                    {profile.image_url || profile.image ? (
+                        <Image
+                            src={profile.image_url || profile.image}
+                            alt={profile.full_name || profile.name}
+                            fill
+                            priority
+                            sizes="(max-width: 450px) 100vw, 450px"
+                            className="object-cover pointer-events-none"
+                            unoptimized={profile.image_url?.startsWith('http')}
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                            <User size={64} className="text-white/20" />
+                        </div>
+                    )}
                     
                     {/* Card Info Overlay */}
                     <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black via-black/80 to-transparent p-8 flex flex-col justify-end">
@@ -101,7 +174,7 @@ export default function Home() {
                          transition={{ delay: 0.2 }}
                       >
                         <h2 className="text-4xl font-black flex items-baseline gap-3">
-                          {profile.name} <span className="text-2xl font-normal text-gray-300">{profile.age}</span>
+                          {profile.full_name || profile.name} <span className="text-2xl font-normal text-gray-300">{profile.age}</span>
                         </h2>
                         <p className="text-lg text-gray-200 mt-2 font-medium leading-relaxed drop-shadow-md">{profile.bio}</p>
                       </motion.div>
@@ -145,7 +218,9 @@ export default function Home() {
           <NavItem Icon={LayoutGrid} />
           <NavItem Icon={Star} badge />
           <NavItem Icon={MessageSquare} />
-          <NavItem Icon={Settings} />
+          <div onClick={handleLogout} className="cursor-pointer text-gray-500 hover:text-red-400 transition-colors">
+            <LogOut size={24} />
+          </div>
         </nav>
 
         {/* Match Overlay */}
@@ -244,3 +319,4 @@ function MatchOverlay({ profile, onClose }: { profile: any; onClose: () => void 
     </motion.div>
   );
 }
+
