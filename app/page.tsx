@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { User, MessageCircle, RotateCcw, X, Star, Heart, Zap, Leaf, LayoutGrid, MessageSquare, Settings, Sparkles, LogOut, Loader2 } from "lucide-react";
+import { User, MessageCircle, RotateCcw, X, Star, Heart, Zap, Leaf, LayoutGrid, MessageSquare, Settings, Sparkles, LogOut, Loader2, School } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
@@ -176,7 +176,25 @@ export default function Home() {
                         <h2 className="text-4xl font-black flex items-baseline gap-3">
                           {profile.full_name || profile.name} <span className="text-2xl font-normal text-gray-300">{profile.age}</span>
                         </h2>
-                        <p className="text-lg text-gray-200 mt-2 font-medium leading-relaxed drop-shadow-md">{profile.bio}</p>
+                        
+                        {profile.university && (
+                          <div className="flex items-center gap-1.5 text-primary-pink font-bold text-sm mt-1 uppercase tracking-wider">
+                            <School size={16} />
+                            {profile.university}
+                          </div>
+                        )}
+
+                        <p className="text-lg text-gray-200 mt-3 font-medium leading-relaxed drop-shadow-md">{profile.bio}</p>
+
+                        {profile.interests && profile.interests.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-4">
+                            {profile.interests.map((interest: string) => (
+                              <span key={interest} className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold text-white/90 border border-white/10 uppercase tracking-tighter">
+                                {interest}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </motion.div>
                     </div>
                   </div>
