@@ -52,9 +52,9 @@ export default function LoginPage() {
 
   return (
     <AuthFormShell title="Welcome Back!" subtitle="Ready for some more sparks?">
-      <div className="space-y-6">
+      <div className="space-y-3 sm:space-y-4">
         {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-4 rounded-2xl text-sm font-medium animate-shake text-center">
+          <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-2.5 rounded-2xl text-[11px] sm:text-xs font-medium animate-shake text-center">
             {error}
           </div>
         )}
@@ -63,13 +63,13 @@ export default function LoginPage() {
         <button
           onClick={handleGoogleLogin}
           disabled={googleLoading}
-          className="w-full py-4 bg-white border border-white/10 rounded-full font-bold text-black flex items-center justify-center gap-3 hover:bg-gray-100 active:scale-[0.98] transition-all cursor-pointer shadow-lg"
+          className="w-full py-2.5 sm:py-3.5 bg-white border border-white/10 rounded-full font-bold text-black flex items-center justify-center gap-2 sm:gap-3 hover:bg-gray-100 active:scale-[0.98] transition-all cursor-pointer shadow-lg text-xs sm:text-sm"
         >
           {googleLoading ? (
-            <Loader2 className="animate-spin" size={24} />
+            <Loader2 className="animate-spin" size={18} />
           ) : (
             <>
-              <svg className="w-6 h-6" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -92,21 +92,20 @@ export default function LoginPage() {
           )}
         </button>
 
-        <div className="relative flex items-center py-2">
+        <div className="relative flex items-center py-1 sm:py-2">
             <div className="flex-grow border-t border-white/10"></div>
-            <span className="flex-shrink mx-4 text-xs font-bold uppercase tracking-widest text-gray-500">OR</span>
+            <span className="flex-shrink mx-4 text-[9px] sm:text-xs font-bold uppercase tracking-widest text-gray-500">OR</span>
             <div className="flex-grow border-t border-white/10"></div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="space-y-4">
-            {/* Email login remains as secondary option */}
+        <form onSubmit={handleLogin} className="space-y-3 sm:space-y-4">
+          <div className="space-y-2 sm:space-y-3">
             <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white" size={20} />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white" size={16} />
               <input
                 type="email"
                 placeholder="Email address"
-                className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 focus:border-primary-pink/50 transition-all font-medium text-white"
+                className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-2.5 sm:py-3.5 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 focus:border-primary-pink/50 transition-all font-medium text-white text-xs sm:text-sm"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -114,11 +113,11 @@ export default function LoginPage() {
             </div>
 
             <div className="relative group">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white" size={20} />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors group-focus-within:text-white" size={16} />
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 focus:border-primary-pink/50 transition-all font-medium text-white"
+                className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-2.5 sm:py-3.5 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 focus:border-primary-pink/50 transition-all font-medium text-white text-xs sm:text-sm"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -128,22 +127,22 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-4 bg-gradient-to-r from-[#FF7854] to-[#FF007F] rounded-full font-black text-xl shadow-[0_10px_30px_rgba(255,0,127,0.3)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer text-white"
+            className="w-full py-3 sm:py-3.5 bg-gradient-to-r from-[#FF7854] to-[#FF007F] rounded-full font-black text-base sm:text-lg shadow-[0_10px_20px_rgba(255,0,127,0.2)] hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group cursor-pointer text-white"
             disabled={loading}
           >
             {loading ? (
-              <Loader2 className="animate-spin" size={24} />
+              <Loader2 className="animate-spin" size={20} />
             ) : (
               <>
-                Sign In <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+                Log In <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
               </>
             )}
           </button>
 
-          <p className="text-center text-gray-400 font-medium">
-            New to Matcha?{" "}
+          <p className="text-center text-gray-400 font-medium text-xs sm:text-sm mt-1 sm:mt-2">
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-primary-pink hover:underline">
-              Join Now
+              Sign Up
             </Link>
           </p>
         </form>

@@ -4,17 +4,21 @@ import React, { useState, useEffect, useRef } from "react";
 import AuthFormShell from "@/components/auth-form-shell";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { User, Calendar, FileText, Camera, Loader2, Sparkles, CheckCircle2, School, Brain, ChevronRight, ChevronLeft, Image as ImageIcon } from "lucide-react";
+import { User, Calendar, FileText, Camera, Loader2, Sparkles, CheckCircle2, School, Brain, ChevronRight, ChevronLeft, Image as ImageIcon, AtSign } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const INTEREST_OPTIONS = [
   "Music", "Travel", "Coffee", "Netflix", "Sports", "Gaming", "Photography", "Cooking", "Art", "Dancing", "Tech", "Nature", "Books", "Movies"
 ];
 
+const UNIVERSITY_OPTIONS = [
+  "University of Nairobi", "Kenyatta University", "Jomo Kenyatta University", "Strathmore University", "United States International University", "Daystar University", "Mount Kenya University", "Egerton University", "Moi University", "Technical University of Kenya"
+];
+
 export default function SetupProfilePage() {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
-  const [age, setAge] = useState("");
+  const [username, setUsername] = useState("");
   const [university, setUniversity] = useState("");
   const [bio, setBio] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
@@ -99,7 +103,7 @@ export default function SetupProfilePage() {
       .upsert({
         id: user.id,
         full_name: fullName,
-        age: parseInt(age),
+        username,
         university,
         bio,
         interests,
@@ -130,87 +134,93 @@ export default function SetupProfilePage() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             onSubmit={(e) => e.preventDefault()}
-            className="space-y-6"
+            className="space-y-3 sm:space-y-4"
           >
             {error && (
-              <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-4 rounded-2xl text-sm font-medium text-center">
+              <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-2.5 rounded-2xl text-xs font-medium text-center">
                 {error}
               </div>
             )}
 
             {/* Step Indicators */}
-            <div className="flex justify-between items-center mb-8 px-2">
+            <div className="flex justify-between items-center mb-4 sm:mb-6 px-4">
               {[1, 2, 3].map(i => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all ${step >= i ? "bg-primary-pink text-white" : "bg-white/10 text-gray-500"}`}>
+                <div key={i} className="flex flex-col items-center gap-1">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step >= i ? "bg-primary-pink text-white shadow-lg shadow-primary-pink/20" : "bg-white/10 text-gray-500"}`}>
                     {i}
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="min-h-[300px] flex flex-col justify-center">
+            <div className="min-h-[220px] sm:min-h-[250px] flex flex-col justify-center px-1">
               {step === 1 && (
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-4">
-                  <h3 className="text-xl font-bold px-1 mb-4">The Basics</h3>
+                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-2.5 sm:space-y-3">
+                  <h3 className="text-base sm:text-lg font-bold px-1 mb-1 sm:mb-2 italic">The Basics</h3>
                   <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white" size={20} />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white" size={18} />
                     <input
                       type="text"
                       placeholder="Full Name"
-                      className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium"
+                      className="w-full bg-[#0c0d10] border border-white/10 rounded-xl py-3 sm:py-3.5 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium text-sm"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                     />
                   </div>
                   <div className="relative group">
-                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white" size={20} />
+                    <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white" size={18} />
                     <input
-                      type="number"
-                      placeholder="Age"
-                      className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium"
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
+                      type="text"
+                      placeholder="Username"
+                      className="w-full bg-[#0c0d10] border border-white/10 rounded-xl py-3 sm:py-3.5 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium text-sm"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
                   <div className="relative group">
-                    <School className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white" size={20} />
+                    <School className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-white" size={18} />
                     <input
                       type="text"
+                      list="universities"
                       placeholder="University"
-                      className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium"
+                      className="w-full bg-[#0c0d10] border border-white/10 rounded-xl py-3 sm:py-3.5 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium text-sm"
                       value={university}
                       onChange={(e) => setUniversity(e.target.value)}
                     />
+                    <datalist id="universities">
+                      {UNIVERSITY_OPTIONS.map(uni => (
+                        <option key={uni} value={uni} />
+                      ))}
+                    </datalist>
                   </div>
                 </motion.div>
               )}
 
               {step === 2 && (
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-4">
-                  <h3 className="text-xl font-bold px-1 mb-4">Bio & Interests</h3>
+                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-2.5 sm:space-y-3">
+                  <h3 className="text-base sm:text-lg font-bold px-1 mb-1 sm:mb-2 italic">Bio & Interests</h3>
                   <div className="relative group">
-                    <FileText className="absolute left-4 top-6 text-gray-500 group-focus-within:text-white" size={20} />
+                    <FileText className="absolute left-4 top-4 text-gray-500 group-focus-within:text-white" size={18} />
                     <textarea
                       placeholder="Tell us about yourself..."
-                      rows={3}
-                      className="w-full bg-[#0c0d10] border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium resize-none"
+                      rows={2}
+                      className="w-full bg-[#0c0d10] border border-white/10 rounded-xl py-3 sm:py-3.5 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary-pink/50 transition-all font-medium resize-none text-sm"
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-gray-400 px-1 mb-2">
-                       <Brain size={18} />
-                       <span className="text-sm font-bold uppercase tracking-wider">Interests</span>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <div className="flex items-center gap-2 text-gray-400 px-1 mb-0.5 sm:mb-1">
+                       <Brain size={16} />
+                       <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Interests</span>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {INTEREST_OPTIONS.map(interest => (
                         <button
                           key={interest}
                           type="button"
                           onClick={() => toggleInterest(interest)}
-                          className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${interests.includes(interest) ? "bg-primary-pink text-white shadow-lg shadow-primary-pink/20" : "bg-white/5 text-gray-400 hover:bg-white/10"}`}
+                          className={`px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all ${interests.includes(interest) ? "bg-primary-pink text-white shadow-lg shadow-primary-pink/20" : "bg-white/5 text-gray-400 hover:bg-white/10"}`}
                         >
                           {interest}
                         </button>
@@ -221,23 +231,23 @@ export default function SetupProfilePage() {
               )}
 
               {step === 3 && (
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-6 flex flex-col items-center">
-                  <h3 className="text-xl font-bold w-full px-1">Profile Photo</h3>
+                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="space-y-3 sm:space-y-4 flex flex-col items-center">
+                  <h3 className="text-base sm:text-lg font-bold w-full px-1 italic">Profile Photo</h3>
                   
                   <div 
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-48 h-48 bg-[#0c0d10] border-2 border-dashed border-white/10 rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:border-primary-pink/50 transition-all overflow-hidden relative group"
+                    className="w-32 h-32 sm:w-40 sm:h-40 bg-[#0c0d10] border-2 border-dashed border-white/10 rounded-[30px] flex flex-col items-center justify-center cursor-pointer hover:border-primary-pink/50 transition-all overflow-hidden relative group shadow-inner"
                   >
                     {imagePreview ? (
                       <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
                       <>
-                        <ImageIcon size={48} className="text-gray-600 group-hover:text-primary-pink transition-colors mb-2" />
-                        <span className="text-xs text-gray-500 font-bold uppercase">Upload Image</span>
+                        <ImageIcon size={32} className="text-gray-600 group-hover:text-primary-pink transition-colors mb-2" />
+                        <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Upload Image</span>
                       </>
                     )}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                       <Camera size={32} className="text-white" />
+                       <Camera size={24} className="text-white" />
                     </div>
                   </div>
                   
@@ -249,21 +259,21 @@ export default function SetupProfilePage() {
                     onChange={handleImageChange}
                   />
                   
-                  <p className="text-center text-xs text-gray-500 px-8">
+                  <p className="text-center text-[10px] text-gray-500 px-6">
                      {imageFile ? "Click photo to change" : "A great photo helps you stand out! ✨"}
                   </p>
                 </motion.div>
               )}
             </div>
 
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-3 pt-2">
               {step > 1 && (
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="flex-1 py-4 bg-white/5 border border-white/10 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-all cursor-pointer"
+                  className="flex-1 py-3 bg-white/5 border border-white/10 rounded-full font-bold text-sm flex items-center justify-center gap-1.5 hover:bg-white/10 transition-all cursor-pointer"
                 >
-                  <ChevronLeft size={20} /> Back
+                  <ChevronLeft size={18} /> Back
                 </button>
               )}
               
@@ -271,18 +281,18 @@ export default function SetupProfilePage() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex-[2] py-4 bg-gradient-to-r from-primary-orange to-primary-pink rounded-full font-black text-xl flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(255,0,127,0.3)] hover:brightness-110 transition-all cursor-pointer"
+                  className="flex-[2] py-3 bg-gradient-to-r from-primary-orange to-primary-pink rounded-full font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(255,0,127,0.3)] hover:brightness-110 transition-all cursor-pointer"
                 >
-                  Next <ChevronRight size={20} />
+                  Next <ChevronRight size={18} />
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="flex-[2] py-4 bg-gradient-to-r from-primary-orange to-primary-pink rounded-full font-black text-xl flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(255,0,127,0.3)] hover:brightness-110 transition-all cursor-pointer"
+                  className="flex-[2] py-3 bg-gradient-to-r from-primary-orange to-primary-pink rounded-full font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(255,0,127,0.3)] hover:brightness-110 transition-all cursor-pointer"
                   disabled={loading}
                 >
-                  {loading ? <Loader2 className="animate-spin" size={24} /> : <>Ready to Swipe <Sparkles size={20} /></>}
+                  {loading ? <Loader2 className="animate-spin" size={20} /> : <>Ready <Sparkles size={18} /></>}
                 </button>
               )}
             </div>
