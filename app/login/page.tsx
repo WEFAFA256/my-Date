@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import React, { useState } from "react";
 import AuthFormShell from "@/components/auth-form-shell";
@@ -139,12 +140,18 @@ export default function LoginPage() {
             )}
           </button>
 
-          <p className="text-center text-gray-400 font-medium text-xs sm:text-sm mt-1 sm:mt-2">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-primary-pink hover:underline">
-              Sign Up
+          <div className="flex flex-col gap-2 mt-4 sm:mt-6">
+            <Link href="/forgot-password" className="text-center text-primary-pink font-bold text-xs hover:underline transition-all">
+              Forgot Password?
             </Link>
-          </p>
+            
+            <p className="text-center text-gray-400 font-medium text-xs sm:text-sm mt-1">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-primary-pink hover:underline font-bold">
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </AuthFormShell>

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -10,25 +11,19 @@
   --color-rewind: #FCD000;
   --color-card-dark: #1a1b22;
   --color-bg-dark: #0c0d10;
+  --font-sans: 'Outfit', sans-serif;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0c0d10;
+  --foreground: #ffffff;
   --primary-gradient: linear-gradient(45deg, #FF7854, #FD267D);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0d10;
-    --foreground: #ffffff;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: inherit;
+  font-family: 'Outfit', sans-serif;
   overflow-x: hidden;
   overflow-y: auto;
   min-height: 100dvh;
@@ -45,7 +40,40 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Hide scrollbar */
+/* Shake animation for error messages */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px); }
+  30% { transform: translateX(6px); }
+  45% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  90% { transform: translateX(2px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Custom scrollbar (thin + themed) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 0, 127, 0.3);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 0, 127, 0.6);
+}
+
+/* Hide scrollbar globally except custom-scrollbar */
 ::-webkit-scrollbar {
   display: none;
 }
+.custom-scrollbar::-webkit-scrollbar {
+  display: block;
+}
